@@ -1,0 +1,13 @@
+{
+  "name": "@pactlio/openclaw-plugin",
+  "version": "1.0.0",
+  "description": "OpenClaw plugin exposing Pactlio contract tools (drafting, state-law requirements, non-compete checks, risk analysis) to agents.",
+  "main": "./index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pactlio-ai/pactlio-mcp",
+    "directory": "openclaw-plugin"
+  },
+  "keywords": ["openclaw", "mcp", "contracts", "legal", "pactlio", "ai-agents"]
+}

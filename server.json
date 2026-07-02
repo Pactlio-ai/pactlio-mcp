@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "com.pactlio/contracts",
+  "description": "Contract drafting, statute-cited US state law requirements, non-compete checks, risk analysis.",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.pactlio.com/mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.pactlio.com/api/mcp"
+    }
+  ]
+}
