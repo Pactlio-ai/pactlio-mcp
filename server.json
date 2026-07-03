@@ -9,5 +9,9 @@
       "type": "streamable-http",
       "url": "https://www.pactlio.com/api/mcp"
     }
-  ]
+  ],
+  "repository": {
+    "url": "https://github.com/Pactlio-ai/pactlio-mcp",
+    "source": "github"
+  }
 }
