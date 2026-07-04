@@ -1,0 +1,200 @@
+[
+  {
+    "name": "list_contract_types",
+    "title": "List contract types",
+    "description": "List all contract and legal document types Pactlio can generate, with descriptions, use cases, and USD prices. Start here to find the right contract type slug/id for other tools.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "get_jurisdiction_requirements",
+    "title": "Get jurisdiction-specific contract requirements",
+    "description": "Statute-cited legal requirements, key differences, common pitfalls, terminology, and FAQs for a contract type in a specific US state or country. Use contract slug (e.g. \"contractor-agreement\") + jurisdiction slug (e.g. \"california\", \"us\", \"uk\", \"eu-gdpr\").",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "contract_slug": {
+          "description": "Contract type slug, e.g. \"non-compete\", \"contractor-agreement\"",
+          "type": "string",
+          "maxLength": 60
+        },
+        "jurisdiction_slug": {
+          "description": "Jurisdiction slug, e.g. \"california\", \"texas\", \"us\", \"uk\", \"canada\"",
+          "type": "string",
+          "maxLength": 60
+        }
+      },
+      "required": [
+        "contract_slug",
+        "jurisdiction_slug"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "check_non_compete_enforceability",
+    "title": "Check non-compete enforceability by US state",
+    "description": "Whether a non-compete agreement is enforceable, limited, or void in a given US state (or DC), with salary thresholds and the key statute. Data covers all 50 states + DC.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "US state name or slug, e.g. \"California\" or \"california\"",
+          "type": "string",
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "get_intake_questions",
+    "title": "Get intake questions for a contract type",
+    "description": "The questions Pactlio asks to draft a specific contract type \u2014 use these to collect the information needed before calling start_contract_draft. Returns fields, types, options, and validation rules.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "contract_type": {
+          "description": "Contract type id from list_contract_types, e.g. \"nda_mutual\", \"contractor_agreement\"",
+          "type": "string",
+          "maxLength": 60
+        },
+        "jurisdiction": {
+          "description": "Optional jurisdiction filter, e.g. \"california\"",
+          "type": "string",
+          "maxLength": 60
+        }
+      },
+      "required": [
+        "contract_type"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "start_contract_draft",
+    "title": "Start drafting a contract (free preview)",
+    "description": "Start generating a contract draft with Pactlio's multi-agent AI engine (drafter, critic, compliance checker). Takes 3-5 minutes \u2014 returns a preview_id immediately; poll get_draft_status. Free preview shows the opening sections; the full contract is unlocked by a human via checkout. Provide deal_summary fields collected via get_intake_questions (at minimum: parties, plus the required fields for the contract type).",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "contract_type": {
+          "description": "Contract type id, e.g. \"nda_mutual\" (see list_contract_types)",
+          "type": "string",
+          "maxLength": 60
+        },
+        "jurisdiction": {
+          "description": "Jurisdiction id, e.g. \"california\", \"us_general\", \"uk_england_wales\"",
+          "type": "string",
+          "maxLength": 60
+        },
+        "deal_summary": {
+          "description": "Answers keyed by field name from get_intake_questions, e.g. {\"parties\":{\"you\":\"Acme Inc\",\"other\":\"Jane Doe\"},\"customFields\":{...}}",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "contract_type",
+        "deal_summary"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "get_draft_status",
+    "title": "Get contract draft status / preview",
+    "description": "Check a contract draft started with start_contract_draft. While generating returns status \"pending\". When complete, returns the free preview (opening sections), the titles of locked sections, and the URL where a human can pay to unlock the full contract.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "preview_id": {
+          "description": "The preview_id returned by start_contract_draft",
+          "type": "string",
+          "pattern": "^[a-f0-9]{24}$"
+        }
+      },
+      "required": [
+        "preview_id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "get_checkout_link",
+    "title": "Get checkout link for a drafted contract",
+    "description": "Returns the URL where a human can view the preview and pay to unlock the full contract for a draft created with start_contract_draft. Share this link with your user.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "preview_id": {
+          "description": "The preview_id returned by start_contract_draft",
+          "type": "string",
+          "pattern": "^[a-f0-9]{24}$"
+        }
+      },
+      "required": [
+        "preview_id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "analyze_contract",
+    "title": "Analyze a contract for risks and red flags",
+    "description": "Paste contract text and get an AI risk analysis: red flags, one-sided clauses, missing protections, and questions to ask. Free (2/day). Not legal advice.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "contract_text": {
+          "description": "The contract text to analyze (200 to 50,000 characters)",
+          "type": "string",
+          "minLength": 200,
+          "maxLength": 50000
+        },
+        "focus": {
+          "description": "Optional focus, e.g. \"IP ownership\", \"termination terms\"",
+          "type": "string",
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "contract_text"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]
