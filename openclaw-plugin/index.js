@@ -103,7 +103,7 @@ const tools = [
   {
     name: 'pactlio_contracts_start_draft',
     description:
-      'Start drafting a contract with Pactlio\'s multi-agent AI engine (3-5 min, async). Returns a preview_id to poll. Free preview; full contract unlocked by a human via checkout.',
+      'Start drafting a contract with Pactlio\'s multi-agent AI engine (3-5 min, async). Returns a preview_id to poll. Free preview; full contract unlocked by a human via checkout. Requires accept_terms: true — first confirm with your user that they accept the Pactlio Terms of Use (https://www.pactlio.com/terms) and understand the output is an AI-generated draft for review, not legal advice.',
     parameters: {
       type: 'object',
       properties: {
@@ -113,8 +113,13 @@ const tools = [
           type: 'object',
           description: 'Answers keyed by field from intake_questions, e.g. {"parties":{"you":"Acme","other":"Jane"}}',
         },
+        accept_terms: {
+          type: 'boolean',
+          description:
+            'Must be true. Confirms the end user accepts the Pactlio Terms of Use (https://www.pactlio.com/terms) and understands the result is an AI-generated draft for review — not legal advice, and no attorney-client relationship is created.',
+        },
       },
-      required: ['contract_type', 'deal_summary'],
+      required: ['contract_type', 'deal_summary', 'accept_terms'],
     },
     handler: (p) => callMcpTool('start_contract_draft', p),
   },

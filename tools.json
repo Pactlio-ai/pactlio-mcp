@@ -65,7 +65,7 @@
   {
     "name": "get_intake_questions",
     "title": "Get intake questions for a contract type",
-    "description": "The questions Pactlio asks to draft a specific contract type \u2014 use these to collect the information needed before calling start_contract_draft. Returns fields, types, options, and validation rules.",
+    "description": "The questions Pactlio asks to draft a specific contract type — use these to collect the information needed before calling start_contract_draft. Returns fields, types, options, and validation rules.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -92,7 +92,7 @@
   {
     "name": "start_contract_draft",
     "title": "Start drafting a contract (free preview)",
-    "description": "Start generating a contract draft with Pactlio's multi-agent AI engine (drafter, critic, compliance checker). Takes 3-5 minutes \u2014 returns a preview_id immediately; poll get_draft_status. Free preview shows the opening sections; the full contract is unlocked by a human via checkout. Provide deal_summary fields collected via get_intake_questions (at minimum: parties, plus the required fields for the contract type).",
+    "description": "Start generating a contract draft with Pactlio's multi-agent AI engine (drafter, critic, compliance checker). Takes 3-5 minutes — returns a preview_id immediately; poll get_draft_status. Free preview shows the opening sections; the full contract is unlocked by a human via checkout. Provide deal_summary fields collected via get_intake_questions (at minimum: parties, plus the required fields for the contract type). REQUIRES accept_terms: true — first confirm with your user that they accept the Pactlio Terms of Use and understand the output is an AI-generated draft for review, not legal advice.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -114,11 +114,16 @@
             "type": "string"
           },
           "additionalProperties": {}
+        },
+        "accept_terms": {
+          "description": "Must be true. Confirms your end user accepts the Pactlio Terms of Use (https://www.pactlio.com/terms) and understands the result is an AI-generated draft for review — not legal advice, and no attorney-client relationship is created.",
+          "type": "boolean"
         }
       },
       "required": [
         "contract_type",
-        "deal_summary"
+        "deal_summary",
+        "accept_terms"
       ]
     },
     "execution": {
@@ -136,7 +141,7 @@
         "preview_id": {
           "description": "The preview_id returned by start_contract_draft",
           "type": "string",
-          "pattern": "^[a-f0-9]{24}$"
+          "pattern": "^([a-f0-9]{24}|[a-f0-9]{32})$"
         }
       },
       "required": [
@@ -158,7 +163,7 @@
         "preview_id": {
           "description": "The preview_id returned by start_contract_draft",
           "type": "string",
-          "pattern": "^[a-f0-9]{24}$"
+          "pattern": "^([a-f0-9]{24}|[a-f0-9]{32})$"
         }
       },
       "required": [
